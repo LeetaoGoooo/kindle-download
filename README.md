@@ -43,7 +43,7 @@ sess-at-main=\"4EHeJ63CJDL9LtXbGwFXCGOKyI0sooxh381f3GjizmM=\";
 
 ### 二进制文件
 
-可以使用已经编译好的二进制文件
+可以使用已经[编译好的二进制文件](https://github.com/LeetaoGoooo/kindle-download/releases/)
 
 ```
 # mac 输入以下命令，回车运行
@@ -63,6 +63,9 @@ go build kindle-download.go
 ```
 编译成功后，当前目录会生成一个 `kindle-download` 的可执行程序
 
+# 截图
+
+![](https://raw.githubusercontent.com/LeetaoGoooo/leetaogoooo.github.io/images/%E6%88%AA%E5%B1%8F2022-06-10%2019.13.54.png)
 
 # 感谢
 
