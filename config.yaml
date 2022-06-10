@@ -1,7 +1,7 @@
 common:
   workerNum: 5
   fileDir: ebooks
-  cookie: session-id=461-2273572-0680712; ubid-acbcn=459-1823784-9364460; x-acbcn=7mOOhmHSY18H5Uyj4bY6y6Taa5UQHpQkT0QHUhC92NsucgyZBqmRDK7VgmTHAgiE; at-main=Atza|IwEBIJZzwDrglVPCXOB9S0reTRdvCodVA9bRRSBR_U-PdkWzWqYxB3A2CMhC3pc2h_r1rfyI78NFI0itCUncXXn3B70yK53Dk3CAbgCkbq3I9k6LHeZYJAr06ctEOb44uNVPyEkUo01tSHgauD87WixNpH8SoYgIVu5t5mLK6AxNTfhwms87EvI3kJiZ1hCc6g6WVghiFkC3NZaFZRs2wIWU9FIk2SgOi1HeeaJ4wDToTlTkQg; sess-at-main="4EHeJ63CJDL9LtXbGwFXCGOKyI0sooxh381f3GjizmM="; sst-main=Sst1|PQHH7LrgX0sal2XjeIO0U4deCdX1U1ssj3p1izSAyb3eUWUpP33zLScZcWrJ1LMItyYr8gtxRppve1REDbHFtVLnnIBeVxka5J3cu9Nhf5canIuwsgwzr41bJmmhtE67UzDwkFzGoxFDyI2EgwT4OAmzbc57HG4TW_KYtBrK6ImpvMuUreJCm7aH0ayIrt9HRRU6zE1hvQbuPrBHs_qrVnhPVkkFaZFOg0mOFA40O_fFOBeJtfXRaSIISfplzjjN54Wqn2CG8rq53fDxDEVzc-4vl14d_PImvVnA0wvdj-GTaV4; lc-acbcn=zh_CN; i18n-prefs=CNY; session-id-time=2082787201l; session-token="xV41fddhxxQAr3YX68kKTabyhOwAgqV8a2eQuCuql4MsQXpAk49XGlMDI49XcH43nv6GNRPc2980T23TdyhDvOkoiAYEI2Y/TQmHfoOH4p6qIXKBDvTKR4KY7uBxzxIc/i2SWlLfQ4E+pV9o9j2pzhgD6K+xMceT551S43bNkxORecmQVC7wLO60xsyDp24Qx3QOcpcTgDUgP1IT86NdWk66vM1Kk+x3MPOiD7AK3HC/OK8I2g4theh4pI4WqpBLrkn66lRtXzc="; csm-hit=tb:s-EEAZ6YR62JCS80SX4XEZ|1654767409887&t:1654767409975&adb:adblk_no
+  cookie: your-cookie
   cn: true
 cn:
   listUrl: https://www.amazon.cn/hz/mycd/myx#/home/content/booksAll
