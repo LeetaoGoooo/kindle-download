@@ -42,6 +42,8 @@ func main() {
 
 	fileTypes := []string{"Ebook", "KindlePDoc"}
 
+	ch := make(chan bool, config.Common.WorkerNum)
+
 	for _, fileType := range fileTypes {
 		startIndex := 0
 		batchSize := 100
@@ -57,7 +59,6 @@ func main() {
 		}
 
 		// 获取电子书下载链接
-		ch := make(chan bool, config.Common.WorkerNum)
 
 		fTyppe := "EBOK"
 		fTyppeMsg := "电子书"
