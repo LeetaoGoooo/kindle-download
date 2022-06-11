@@ -56,10 +56,11 @@ func main() {
 		totalContentCount := 0
 		// 获取电子书列表
 		resp := kindle.GetBookList(formatter.NewReqBookList(startIndex, batchSize, totalContentCount, fileType))
+		totalContentCount = resp.OwnershipData.NumberOfItems
 		Items := resp.OwnershipData.Items
-		if resp.OwnershipData.HasMoreItems {
+
+		for resp.OwnershipData.HasMoreItems {
 			startIndex += 18
-			totalContentCount = resp.OwnershipData.NumberOfItems
 			resp = kindle.GetBookList(formatter.NewReqBookList(startIndex, batchSize, totalContentCount, fileType))
 			Items = append(Items, resp.OwnershipData.Items...)
 		}

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"kindle-download/formatter"
+	"log"
 	"net/http"
 	"net/url"
 	"os"
@@ -56,18 +57,18 @@ func (kindleClient *KindleClient) GetCsrfToken() {
 	req, err := kindleClient.NewRequest("GET", url, nil)
 
 	if err != nil {
-		panic(fmt.Errorf("请求异常: %v", err))
+		panic(err)
 	}
 	resp, err := kindleClient.Client.Do(req)
 
 	if err != nil {
-		panic(fmt.Errorf("请求异常: %v", err))
+		panic(err)
 	}
 
 	respBody, err := io.ReadAll(resp.Body)
 
 	if err != nil {
-		panic(fmt.Errorf("读取响应异常: %v", err))
+		panic(err)
 	}
 	r, _ := regexp.Compile("var csrfToken = \"(.+)\"")
 
@@ -96,20 +97,17 @@ func (kindleClient *KindleClient) GetDevices() (result *formatter.DevicesResp) {
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	if err != nil {
-		fmt.Println("构建请求异常", err)
-		return
+		panic(err)
 	}
 	resp, err := kindleClient.Client.Do(req)
 
 	if err != nil {
-		fmt.Println("获取设备链接异常", err)
-		return
+		panic(err)
 	}
 
 	respBody, err := io.ReadAll(resp.Body)
 	if err != nil {
-		fmt.Println("读取响应异常", err)
-		return
+		panic(err)
 	}
 	json.Unmarshal(respBody, &result)
 	return
@@ -121,8 +119,7 @@ func (kindleClient *KindleClient) GetBookList(params formatter.ReqBookList) (res
 	data, err := json.Marshal(params.Data)
 
 	if err != nil {
-		fmt.Println("序列化请求参数异常", err)
-		return
+		panic(err)
 	}
 
 	body.Set("data", string(data))
@@ -139,19 +136,16 @@ func (kindleClient *KindleClient) GetBookList(params formatter.ReqBookList) (res
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	if err != nil {
-		fmt.Println("构建请求异常", err)
-		return
+		panic(err)
 	}
 	resp, err := kindleClient.Client.Do(req)
 
 	if err != nil {
-		fmt.Println("请求文档下载链接异常", err)
-		return
+		panic(err)
 	}
 	respBody, err := io.ReadAll(resp.Body)
 	if err != nil {
-		fmt.Println("读取响应异常", err)
-		return
+		panic(err)
 	}
 	json.Unmarshal(respBody, &result)
 	return
@@ -163,8 +157,7 @@ func (kindleClient *KindleClient) GetDownloadLink(params formatter.DownLoadBookR
 	data, err := json.Marshal(params.Data)
 
 	if err != nil {
-		fmt.Println("序列化请求参数异常", err)
-		return
+		panic(err)
 	}
 
 	body.Set("data", string(data))
@@ -181,20 +174,17 @@ func (kindleClient *KindleClient) GetDownloadLink(params formatter.DownLoadBookR
 	req.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 
 	if err != nil {
-		fmt.Println("构建请求异常", err)
-		return
+		panic(err)
 	}
 
 	resp, err := kindleClient.Client.Do(req)
 
 	if err != nil {
-		fmt.Println("请求文档下载链接异常", err)
-		return
+		panic(err)
 	}
 	respBody, err := io.ReadAll(resp.Body)
 	if err != nil {
-		fmt.Println("读取响应异常", err)
-		return
+		panic(err)
 	}
 	json.Unmarshal(respBody, &result)
 	return
@@ -202,17 +192,21 @@ func (kindleClient *KindleClient) GetDownloadLink(params formatter.DownLoadBookR
 
 func (kindleClient *KindleClient) DownloadFile(fileDownload formatter.FileDownload) {
 
+	defer func() {
+		if err := recover(); err != nil {
+			log.Println("panic occurred:", fileDownload)
+		}
+	}()
+
 	req, err := kindleClient.NewRequest("GET", fileDownload.Url, nil)
 	if err != nil {
-		fmt.Println("构建请求异常", err)
-		return
+		panic(err)
 	}
 
 	resp, err := kindleClient.Client.Do(req)
 
 	if err != nil {
-		fmt.Println("请求文档下载链接异常", err)
-		return
+		panic(err)
 	}
 
 	// 文件后缀从 header 中获取 content-disposition
@@ -238,17 +232,27 @@ func (kindleClient *KindleClient) DownloadFile(fileDownload formatter.FileDownlo
 
 	fmt.Printf("开始下载 【%s】\n", fileDownload.FileName)
 
+	m := regexp.MustCompile(`[/\\?%*:|"<>]`)
+
+	fileName = m.ReplaceAllString(fileName, "_")
+
 	fileSize := int(resp.ContentLength)
 
-	file, err := os.Create(fmt.Sprintf("%s/%s", kindleClient.Config.Common.FileDir, fileName))
-	if err != nil {
-		fmt.Println("创建文件异常", err)
+	filePath := fmt.Sprintf("%s/%s", kindleClient.Config.Common.FileDir, fileName)
+
+	_, err = os.Stat(filePath)
+
+	if !os.IsNotExist(err) {
 		return
+	}
+
+	file, err := os.Create(filePath)
+	if err != nil {
+		panic(err)
 	}
 	defer file.Close()
 	bar := pb.New(fileSize).SetUnits(pb.U_BYTES)
 	bar.Start()
 	rd := bar.NewProxyReader(resp.Body)
 	io.Copy(file, rd)
-
 }
