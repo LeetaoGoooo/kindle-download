@@ -1,29 +1,35 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"html"
 	"io/ioutil"
 	"kindle-download/formatter"
 	"kindle-download/tools"
-
-	"gopkg.in/yaml.v2"
+	"os"
+	"strings"
 )
 
 func main() {
 	fmt.Println("***************************************************\n    欢迎使用 Kindle Downloader 工具    \n    项目开源在 github.com/leetaogoooo/kindle-download    \n    欢迎提交问题和建议    \n    别忘了 star 一下哦    \n***************************************************")
 
-	var config formatter.Config
-	File, err := ioutil.ReadFile("config.yaml")
-	if err != nil {
-		fmt.Printf("读取配置文件失败 #%v", err)
-		return
+	if !checkCookieFile() {
+		os.Exit(1)
 	}
-	err = yaml.Unmarshal(File, &config)
-	if err != nil {
-		fmt.Printf("解析失败: %v", err)
-		return
-	}
+
+	cookie := ReadCookieFromFile()
+
+	var workerNum int
+	var fileDir string
+	var cn bool
+
+	flag.IntVar(&workerNum, "worker", 5, "最大协程数,默认为5")
+	flag.StringVar(&fileDir, "dir", "ebooks", "文件保存目录,默认为当前目录下的ebooks")
+	flag.BoolVar(&cn, "cn", true, "是否下载中国版的书籍,默认为 true")
+	flag.Parse()
+
+	var config formatter.Config = formatter.NewConfig(workerNum, fileDir, cookie, cn)
 
 	kindle := tools.NewKindleClient(config)
 	kindle.GetCsrfToken()
@@ -92,4 +98,33 @@ func main() {
 			}()
 		}
 	}
+}
+
+// 检查 cookie 文件是否存在
+// 并创建文件
+func checkCookieFile() bool {
+	_, err := os.Stat("cookie.txt")
+	if os.IsNotExist(err) {
+		fmt.Println("cookie.txt 文件不存在，将自动创建，将浏览器的 cookie 粘贴到 cookie.txt 文件中,重新运行文件即可")
+		file, err := os.Create("cookie.txt")
+		if err != nil {
+			fmt.Println("创建 cookie.txt 文件失败,请手动创建 cookie.txt 文件,并将浏览器的 cookie 粘贴到 cookie.txt 文件中")
+		}
+		defer file.Close()
+		return false
+	}
+	return true
+}
+
+// 从配置文件中获取 cookie
+func ReadCookieFromFile() string {
+	f, err := ioutil.ReadFile("cookie.txt")
+	if err != nil {
+		panic("读取 cookie 文件失败")
+	}
+	cookie := string(f)
+	if len(strings.Trim(cookie, "")) == 0 {
+		panic("cookie 为空, 请检查 cookie.txt 文件")
+	}
+	return cookie
 }
