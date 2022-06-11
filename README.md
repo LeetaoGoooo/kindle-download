@@ -6,40 +6,27 @@
 
 ## 配置说明
 
-修改 `config.yaml` 文件中的对应参数
-
-```yaml
-common:
-  workerNum: 5 # 最大协程数，协程数并不是越大越好
-  fileDir: ebooks  # 下载文档保存的目录
-  cookie: "" # 登录后的 cookie，需要手动登录，在浏览器将 cookies 复制到这里
-  cn: true # 是否是国区
-# 一下配置不要修改
-cn:
-  listUrl: https://www.amazon.cn/hz/mycd/myx#/home/content/booksAll
-  ajaxUrl: https://www.amazon.cn/hz/mycd/ajax
-com:
-  listUrl: https://www.amazon.com/hz/mycd/myx#/home/content/booksAll
-  ajaxUrl: https://www.amazon.com/hz/mycd/ajax
-```
+初次运行会在当前目录生成一个 `cookie.txt`,将浏览器 `cookie` 粘贴到 `cookie.txt` 中，重新运行程序即可，也可以直接在当前目录手动创建一个 `cookie.txt` 文件，将浏览器 `cookie` 粘贴到 `cookie.txt` 中，运行程序
 
 ### cookie 的获取
 
-登录亚马逊后，F12 打开浏览器控制台，然后找到任意请求，将下图的 cookie 对应的值，复制到 `config.yaml`
+登录亚马逊后，F12 打开浏览器控制台，然后找到任意请求，将下图的 cookie 对应的值，复制到 `cookie.txt`
 
 ![](https://raw.githubusercontent.com/LeetaoGoooo/leetaogoooo.github.io/images/%E6%88%AA%E5%B1%8F2022-06-09%2021.16.06.png)
 
-**注意**：cookie 里存在 “"” 的情况，需要在 “"” 前加 "\" 转义，如下:
-
-```
-sess-at-main="4EHeJ63CJDL9LtXbGwFXCGOKyI0sooxh381f3GjizmM="; 
-转义后： 
-sess-at-main=\"4EHeJ63CJDL9LtXbGwFXCGOKyI0sooxh381f3GjizmM=\"; 
-```
-
-
 
 ## 使用
+
+
+```bash
+Usage of kindle-download:
+  -cn
+        是否下载中国版的书籍,默认为 true (default true)
+  -dir string
+        文件保存目录,默认为当前目录下的ebooks (default "ebooks")
+  -worker int
+        最大协程数,默认为5 (default 5)
+```
 
 ### 二进制文件
 
@@ -47,7 +34,7 @@ sess-at-main=\"4EHeJ63CJDL9LtXbGwFXCGOKyI0sooxh381f3GjizmM=\";
 
 ```
 # mac 输入以下命令，回车运行
-./kindle-download
+./kindle-download [workerNum 最大协程数] [fileDir 保持文件夹] [cn 是否下载中国版的书籍,默认为 true]
 ```
 
 ### 直接运行

@@ -14,12 +14,6 @@ import (
 func main() {
 	fmt.Println("***************************************************\n    欢迎使用 Kindle Downloader 工具    \n    项目开源在 github.com/leetaogoooo/kindle-download    \n    欢迎提交问题和建议    \n    别忘了 star 一下哦    \n***************************************************")
 
-	if !checkCookieFile() {
-		os.Exit(1)
-	}
-
-	cookie := ReadCookieFromFile()
-
 	var workerNum int
 	var fileDir string
 	var cn bool
@@ -28,6 +22,12 @@ func main() {
 	flag.StringVar(&fileDir, "dir", "ebooks", "文件保存目录,默认为当前目录下的ebooks")
 	flag.BoolVar(&cn, "cn", true, "是否下载中国版的书籍,默认为 true")
 	flag.Parse()
+
+	if !checkCookieFile() {
+		os.Exit(1)
+	}
+
+	cookie := ReadCookieFromFile()
 
 	var config formatter.Config = formatter.NewConfig(workerNum, fileDir, cookie, cn)
 
