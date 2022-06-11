@@ -27,9 +27,3 @@ jobs:
           args: release --rm-dist
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
-      # 发布到 Release
-      - 
-        name: Release Kindle-Download
-        uses: ncipollo/release-action@v1.5.0
-        with:
-          token: ${{ secrets.RELEASE_TOKEN }}
